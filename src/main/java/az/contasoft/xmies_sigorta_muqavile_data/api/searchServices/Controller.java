@@ -38,5 +38,8 @@ public class Controller {
         return service.getAllSigortaMuqavileData();
     }
 
-
+    @GetMapping("/cache")
+    public ResponseEntity<String> startCaching() {
+        return service.startCaching();
+    }
 }

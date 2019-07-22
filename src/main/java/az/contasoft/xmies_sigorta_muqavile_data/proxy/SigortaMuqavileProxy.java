@@ -14,7 +14,7 @@ import java.util.Map;
 
 public interface SigortaMuqavileProxy {
 
-        @GetMapping("/xmies_sigorta_muqavile/searchServices/getAll")
+        @GetMapping("/xmies_sigorta_muqavile/searchServices/list")
         ResponseEntity<Map<Long,SigortaMuqavile>> getSigortaMuqavile();
     }
 

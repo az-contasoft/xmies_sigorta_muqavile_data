@@ -1,4 +1,4 @@
-package az.contasoft.xmies_xidmetler_data.api.searchServices.internal.entity;
+package az.contasoft.xmies_xidmetler.db.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,18 +12,16 @@ public class Xidmetler implements Serializable {
     private String xidmetAdi;
     private String xidmetKodu;
     private BigDecimal qiymet;
-    private long idPersonal;
     private int isDelete;
 
     public Xidmetler() {
     }
 
-    public Xidmetler(long idXidmetler, String xidmetAdi, String xidmetKodu, BigDecimal qiymet, long idPersonal, int isDelete) {
+    public Xidmetler(long idXidmetler, String xidmetAdi, String xidmetKodu, BigDecimal qiymet, int isDelete) {
         this.idXidmetler = idXidmetler;
         this.xidmetAdi = xidmetAdi;
         this.xidmetKodu = xidmetKodu;
         this.qiymet = qiymet;
-        this.idPersonal = idPersonal;
         this.isDelete = isDelete;
     }
 
@@ -34,12 +32,13 @@ public class Xidmetler implements Serializable {
                 ", xidmetAdi='" + xidmetAdi + '\'' +
                 ", xidmetKodu='" + xidmetKodu + '\'' +
                 ", qiymet=" + qiymet +
-                ", idPersonal=" + idPersonal +
                 ", isDelete=" + isDelete +
                 '}';
     }
 
-
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public long getIdXidmetler() {
         return idXidmetler;
@@ -71,14 +70,6 @@ public class Xidmetler implements Serializable {
 
     public void setQiymet(BigDecimal qiymet) {
         this.qiymet = qiymet;
-    }
-
-    public long getIdPersonal() {
-        return idPersonal;
-    }
-
-    public void setIdPersonal(long idPersonal) {
-        this.idPersonal = idPersonal;
     }
 
     public int getIsDelete() {

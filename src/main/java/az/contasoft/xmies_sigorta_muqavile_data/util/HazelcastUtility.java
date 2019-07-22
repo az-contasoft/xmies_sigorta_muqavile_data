@@ -1,23 +1,24 @@
 package az.contasoft.xmies_sigorta_muqavile_data.util;
 
 
-import az.contasoft.xmies_paket_data.api.searchServices.internal.PaketData;
+import az.contasoft.xmies_paket.db.entity.Paket;
 import az.contasoft.xmies_sigorta_muqavile.db.entity.SigortaMuqavile;
 import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internal.SigortaMuqavileData;
-import az.contasoft.xmies_sigorta_muqavile_data.proxy.PaketDataProxy;
+import az.contasoft.xmies_sigorta_muqavile_data.proxy.PaketProxy;
 import az.contasoft.xmies_sigorta_muqavile_data.proxy.SigortaMuqavileProxy;
 import az.contasoft.xmies_sigorta_muqavile_data.proxy.SigortaQurumProxy;
-import az.contasoft.xmies_sigorta_muqavile_data.proxy.XidmetlerDataProxy;
+import az.contasoft.xmies_sigorta_muqavile_data.proxy.XidmetlerProxy;
 import az.contasoft.xmies_sigortaqurum.db.entity.SigortaQurum;
-import az.contasoft.xmies_xidmetler_data.api.searchServices.internal.XidmetlerData;
+import az.contasoft.xmies_xidmetler.db.entity.Xidmetler;
+import com.hazelcast.core.IList;
 import com.hazelcast.core.IMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.PostConstruct;
+
 import java.util.Map;
 
 @Component
@@ -26,9 +27,12 @@ public class HazelcastUtility {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    private final PaketDataProxy paketDataProxy;
+    private final IList<SigortaMuqavileData> listOfsigortaMuqavileData;
+    private final PaketProxy paketProxy;
+    private final IMap<Long, Paket> mapOfPaket;
 
-    private final XidmetlerDataProxy xidmetlerDataProxy;
+    private final XidmetlerProxy xidmetlerProxy;
+    private final IMap<Long, Xidmetler> mapOfXidmetler;
 
     private final SigortaMuqavileProxy sigortaMuqavileProxy;
 
@@ -38,49 +42,67 @@ public class HazelcastUtility {
 
     private final IMap<Long, SigortaQurum> mapOfSigortaQurum;
 
-    public HazelcastUtility(PaketDataProxy paketDataProxy, XidmetlerDataProxy xidmetlerDataProxy, SigortaMuqavileProxy sigortaMuqavileProxy, IMap<Long, SigortaMuqavile> mapOfSigortaMuqavile, SigortaQurumProxy sigortaQurumProxy, IMap<Long, SigortaQurum> mapOfSigortaQurum) {
-        this.paketDataProxy = paketDataProxy;
-        this.xidmetlerDataProxy = xidmetlerDataProxy;
+    public HazelcastUtility(IList<SigortaMuqavileData> listOfsigortaMuqavileData, PaketProxy paketProxy, IMap<Long, Paket> mapOfPaket, XidmetlerProxy xidmetlerProxy, IMap<Long, Xidmetler> mapOfXidmetler, SigortaMuqavileProxy sigortaMuqavileProxy, IMap<Long, SigortaMuqavile> mapOfSigortaMuqavile, SigortaQurumProxy sigortaQurumProxy, IMap<Long, SigortaQurum> mapOfSigortaQurum) {
+        this.listOfsigortaMuqavileData = listOfsigortaMuqavileData;
+        this.paketProxy = paketProxy;
+        this.mapOfPaket = mapOfPaket;
+        this.xidmetlerProxy = xidmetlerProxy;
+        this.mapOfXidmetler = mapOfXidmetler;
         this.sigortaMuqavileProxy = sigortaMuqavileProxy;
         this.mapOfSigortaMuqavile = mapOfSigortaMuqavile;
         this.sigortaQurumProxy = sigortaQurumProxy;
         this.mapOfSigortaQurum = mapOfSigortaQurum;
     }
 
-    public XidmetlerData getXidmetlerData(long idXidmetler) {
+    public IList<SigortaMuqavileData> getListOfsigortaMuqavileData() {
+        if (listOfsigortaMuqavileData.isEmpty()) {
+            startCaching();
+        }
+        return listOfsigortaMuqavileData;
+    }
+
+
+
+    public Xidmetler getXidmetler(long idXidmetler) {
         try {
-            logger.info("XidmetlerData-ni proxy ile almaga chalishiriq");
-            ResponseEntity<XidmetlerData> response = xidmetlerDataProxy.getXidmetlerData(idXidmetler);
-            if (response.getStatusCodeValue() == 200) {
-                return response.getBody();
-            } else {
-                return null;
+            logger.info("Hazelcastdan Xidmetler almaga chalishiriq idXidmetler : " + idXidmetler);
+            Xidmetler xidmetler = mapOfXidmetler.get(idXidmetler);
+            if (xidmetler == null) {
+                logger.info("HazelCastda Xidmetler yoxdu proxy ile almaga chalishiriq");
+                ResponseEntity<Xidmetler> response = xidmetlerProxy.getXidmetler(idXidmetler);
+                if (response.getStatusCodeValue() == 200) {
+                    xidmetler = response.getBody();
+                }
             }
-        }catch (Exception e){
-            logger.error("Error getting XidmetlerData from  or getting data from XidmetlerData Proxy : "+e,e);
-            return  null;
+            return xidmetler;
+        } catch (Exception e) {
+            logger.error("Error getting Xidmetler from  or getting data from Xidmetler Proxy : " + e, e);
+            return null;
         }
     }
 
-    public PaketData getPaketData(long idPaket) {
+    public Paket getPaket(long idPaket) {
         try {
-            logger.info("PaketData-ni proxy ile almaga chalishiriq");
-            ResponseEntity<PaketData> response = paketDataProxy.getPaketData(idPaket);
-            if (response.getStatusCodeValue() == 200) {
-                return response.getBody();
-            } else {
-                return null;
+            logger.info("Hazelcastdan Paketi almaga chalishiriq idPaket : " + idPaket);
+            Paket paket = mapOfPaket.get(idPaket);
+            if (paket == null) {
+                logger.info("Hazelcastda Paket yoxdu proxy ile almaga chalishiriq");
+                ResponseEntity<Paket> response = paketProxy.getPaket(idPaket);
+                if (response.getStatusCodeValue() == 200) {
+                    paket = response.getBody();
+                }
             }
+            return paket;
         } catch (Exception e) {
-            logger.error("Error getting PaketData from  or getting data from PaketData Proxy : " + e, e);
+            logger.error("Error getting Paket from  or getting data from Paket Proxy : " + e, e);
             return null;
         }
     }
 
 
-    public SigortaQurum getSigortaQurum(long idSigortaQurum){
+    public SigortaQurum getSigortaQurum(long idSigortaQurum) {
         try {
-            logger.info("Hazelcastdan SigortaQurumu almaga chalishiriq idSigortaQurum : "+idSigortaQurum);
+            logger.info("Hazelcastdan SigortaQurumu almaga chalishiriq idSigortaQurum : " + idSigortaQurum);
             SigortaQurum sigortaQurum = mapOfSigortaQurum.get(idSigortaQurum);
             if (sigortaQurum == null) {
                 logger.info("Hazelcast da sigortaQurum yoxdu proxy ile almaga chalishiriq");
@@ -90,73 +112,71 @@ public class HazelcastUtility {
                 }
             }
             return sigortaQurum;
-        }catch (Exception e){
-            logger.error("Error getting SigortaQurum from MapOfSigortaQurum or getting data from SigortaQurum Proxy : "+e,e);
+        } catch (Exception e) {
+            logger.error("Error getting SigortaQurum from MapOfSigortaQurum or getting data from SigortaQurum Proxy : " + e, e);
             return null;
         }
     }
 
-        public Map<Long,SigortaMuqavile> getSigortaMuqavile() {
-            try {
-                logger.info("Hazelcastdan SigortaMuqavileni almaga chalishiriq  : ");
-                Map<Long,SigortaMuqavile> sigortaMuqavileMap = mapOfSigortaMuqavile;
-                if (sigortaMuqavileMap== null || sigortaMuqavileMap.isEmpty()){
-                    logger.info("Hazelcast da SigortaMuqavileni yoxdu proxy ile almaga chalishiriq");
-                    ResponseEntity<Map<Long,SigortaMuqavile>> responseEntity = sigortaMuqavileProxy.getSigortaMuqavile();
-                    if (responseEntity.getStatusCodeValue()==200){
-                        sigortaMuqavileMap = responseEntity.getBody();
-                    }
-                }
-                return sigortaMuqavileMap ;
-            } catch (Exception e) {
-                logger.error("Error getting PaketInfo from  or getting data from Pketinfo Proxy : "+e,e);
-                return null;
-            }
-        }
-
-
-
-
-
-        public List<SigortaMuqavileData> getAllSigortaMuqavileData() {
+    public Map<Long, SigortaMuqavile> getSigortaMuqavile() {
         try {
-            Map<Long,SigortaMuqavile> sigortaMuqavileMap = getSigortaMuqavile();
-            List<SigortaMuqavileData> sigortaMuqavileDataList = new ArrayList<>();
+            logger.info("Hazelcastdan SigortaMuqavileni almaga chalishiriq  : ");
+            Map<Long, SigortaMuqavile> sigortaMuqavileMap = mapOfSigortaMuqavile;
+            if (sigortaMuqavileMap == null || sigortaMuqavileMap.isEmpty()) {
+                logger.info("Hazelcast da SigortaMuqavileni yoxdu proxy ile almaga chalishiriq");
+                ResponseEntity<Map<Long, SigortaMuqavile>> responseEntity = sigortaMuqavileProxy.getSigortaMuqavile();
+                if (responseEntity.getStatusCodeValue() == 200) {
+                    sigortaMuqavileMap = responseEntity.getBody();
+                }
+            }
+            return sigortaMuqavileMap;
+        } catch (Exception e) {
+            logger.error("Error getting SigortaMuqavile from  or getting data from SigortaMuqavile Proxy : " + e, e);
+            return null;
+        }
+    }
+
+
+    private void getAllSigortaMuqavileData() {
+        try {
+            Map<Long, SigortaMuqavile> sigortaMuqavileMap = getSigortaMuqavile();
             for (Long idSigortaMuqavile : sigortaMuqavileMap.keySet()) {
                 SigortaMuqavileData sigortaMuqavileData = new SigortaMuqavileData();
                 SigortaMuqavile sigortaMuqavile = sigortaMuqavileMap.get(idSigortaMuqavile);
-                if (sigortaMuqavile != null) {
-                    if (sigortaMuqavile.getIdSigortaQurum() >0 ) {
-                        SigortaQurum sigortaQurum = getSigortaQurum(sigortaMuqavile.getIdSigortaQurum());
-                        sigortaMuqavileData.setSigortaQurum(sigortaQurum);
-                    }
+                sigortaMuqavileData.setSigortaMuqavile(sigortaMuqavile);
 
-                    sigortaMuqavileData.setSigortaMuqavile(sigortaMuqavile);
+                if (sigortaMuqavile.getIdSigortaQurum() > 0) {
+                    SigortaQurum sigortaQurum = getSigortaQurum(sigortaMuqavile.getIdSigortaQurum());
+                    sigortaMuqavileData.setSigortaQurum(sigortaQurum);
+                }
 
-                    if (sigortaMuqavile.getIdXidmetler() > 0) {
-                        XidmetlerData xidmetler = getXidmetlerData(sigortaMuqavile.getIdXidmetler());
-                        sigortaMuqavileData.setXidmetlerData(xidmetler);
-                    }else {
-                        if (sigortaMuqavile.getIdPaket() >0 ) {
-                            PaketData paketData = getPaketData(sigortaMuqavile.getIdPaket());
-                            sigortaMuqavileData.setPaketData(paketData);
-                        }
+                if (sigortaMuqavile.getIdXidmetler() > 0) {
+                    Xidmetler xidmetler = getXidmetler(sigortaMuqavile.getIdXidmetler());
+                    sigortaMuqavileData.setXidmetler(xidmetler);
+                } else {
+                    if (sigortaMuqavile.getIdPaket() > 0) {
+                        Paket paket = getPaket(sigortaMuqavile.getIdPaket());
+                        sigortaMuqavileData.setPaket(paket);
                     }
                 }
-                sigortaMuqavileDataList.add(sigortaMuqavileData);
+                listOfsigortaMuqavileData.add(sigortaMuqavileData);
             }
-            return sigortaMuqavileDataList;
-        }catch (Exception e) {
-            logger.error("Error getting all paket info data "+e,e);
-            return null;
+        } catch (Exception e) {
+            logger.error("Error getting all SigortaMuqavile info data " + e, e);
         }
-        }
-
-
-
-
-
     }
 
+    public void startCaching() {
+        listOfsigortaMuqavileData.clear();
+        getAllSigortaMuqavileData();
+    }
 
+    @PostConstruct
+    public void init() {
+        listOfsigortaMuqavileData.clear();
+        listOfsigortaMuqavileData.destroy();
+        logger.info("\n→→→HAZEL: trying to init PostConstruct\n\n");
+        startCaching();
+    }
 
+}

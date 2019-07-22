@@ -1,9 +1,9 @@
 package az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internal;
 
-import az.contasoft.xmies_paket_data.api.searchServices.internal.PaketData;
+import az.contasoft.xmies_paket.db.entity.Paket;
 import az.contasoft.xmies_sigorta_muqavile.db.entity.SigortaMuqavile;
 import az.contasoft.xmies_sigortaqurum.db.entity.SigortaQurum;
-import az.contasoft.xmies_xidmetler_data.api.searchServices.internal.XidmetlerData;
+import az.contasoft.xmies_xidmetler.db.entity.Xidmetler;
 
 import java.io.Serializable;
 
@@ -14,14 +14,14 @@ public class SigortaMuqavileData implements Serializable {
 
     private SigortaQurum sigortaQurum;
     private SigortaMuqavile sigortaMuqavile;
-    private XidmetlerData xidmetlerData;
-    private PaketData paketData;
+    private Xidmetler xidmetler;
+    private Paket paket;
 
-    public SigortaMuqavileData(SigortaQurum sigortaQurum, SigortaMuqavile sigortaMuqavile, XidmetlerData xidmetlerData, PaketData paketData) {
+    public SigortaMuqavileData(SigortaQurum sigortaQurum, SigortaMuqavile sigortaMuqavile, Xidmetler xidmetler, Paket paket) {
         this.sigortaQurum = sigortaQurum;
         this.sigortaMuqavile = sigortaMuqavile;
-        this.xidmetlerData = xidmetlerData;
-        this.paketData = paketData;
+        this.xidmetler = xidmetler;
+        this.paket = paket;
     }
 
     public SigortaMuqavileData() {
@@ -32,8 +32,8 @@ public class SigortaMuqavileData implements Serializable {
         return "SigortaMuqavileData{" +
                 "sigortaQurum=" + sigortaQurum +
                 ", sigortaMuqavile=" + sigortaMuqavile +
-                ", xidmetlerData=" + xidmetlerData +
-                ", paketData=" + paketData +
+                ", xidmetler=" + xidmetler +
+                ", paket=" + paket +
                 '}';
     }
 
@@ -53,19 +53,19 @@ public class SigortaMuqavileData implements Serializable {
         this.sigortaMuqavile = sigortaMuqavile;
     }
 
-    public XidmetlerData getXidmetlerData() {
-        return xidmetlerData;
+    public Xidmetler getXidmetler() {
+        return xidmetler;
     }
 
-    public void setXidmetlerData(XidmetlerData xidmetlerData) {
-        this.xidmetlerData = xidmetlerData;
+    public void setXidmetler(Xidmetler xidmetler) {
+        this.xidmetler = xidmetler;
     }
 
-    public PaketData getPaketData() {
-        return paketData;
+    public Paket getPaket() {
+        return paket;
     }
 
-    public void setPaketData(PaketData paketData) {
-        this.paketData = paketData;
+    public void setPaket(Paket paket) {
+        this.paket = paket;
     }
 }

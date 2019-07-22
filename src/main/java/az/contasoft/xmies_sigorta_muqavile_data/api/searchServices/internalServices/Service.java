@@ -26,7 +26,7 @@ public class Service {
 
     public ResponseEntity<List<SigortaMuqavileData>> getAllSigortaMuqavileData() {
         try {
-            List<SigortaMuqavileData> sigortaMuqavileDataList = hazelcastUtility.getAllSigortaMuqavileData();
+            List<SigortaMuqavileData> sigortaMuqavileDataList = hazelcastUtility.getListOfsigortaMuqavileData();
             if (sigortaMuqavileDataList == null || sigortaMuqavileDataList.isEmpty()) {
                 logger.info("sigortaMuqavileDataList isEmpty");
                 return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
@@ -41,7 +41,7 @@ public class Service {
 
     public ResponseEntity<List<SigortaMuqavileData>> getAllMuqavileByIdQurum(long idSigortaQurum) {
         try {
-            List<SigortaMuqavileData> sigortaMuqavileDataList = hazelcastUtility.getAllSigortaMuqavileData().stream().filter(smd -> smd.getSigortaMuqavile().getIdSigortaQurum() == idSigortaQurum).collect(Collectors.toList());
+            List<SigortaMuqavileData> sigortaMuqavileDataList = hazelcastUtility.getListOfsigortaMuqavileData().stream().filter(smd -> smd.getSigortaMuqavile().getIdSigortaQurum() == idSigortaQurum).collect(Collectors.toList());
             if (sigortaMuqavileDataList.isEmpty()) {
                 logger.info("sigortaQurumList isEmpty");
                 return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
@@ -53,4 +53,12 @@ public class Service {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    public ResponseEntity<String> startCaching() {
+        hazelcastUtility.startCaching();
+        return new ResponseEntity<>("Cached", HttpStatus.OK);
+    }
+
+
+
 }

@@ -1,4 +1,4 @@
-package az.contasoft.xmies_paket_data.api.searchServices.internal.entity;
+package az.contasoft.xmies_paket.db.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -11,16 +11,14 @@ public class Paket  implements Serializable {
     private String paketAdi;
     private String paketKodu;
     private BigDecimal paketQiymeti;
-    private long idPersonal;
     private int isDelete;
 
 
-    public Paket(long idPaket, String paketAdi, String paketKodu, BigDecimal paketQiymeti, long idPersonal, int isDelete) {
+    public Paket(long idPaket, String paketAdi, String paketKodu, BigDecimal paketQiymeti, int isDelete) {
         this.idPaket = idPaket;
         this.paketAdi = paketAdi;
         this.paketKodu = paketKodu;
         this.paketQiymeti = paketQiymeti;
-        this.idPersonal = idPersonal;
         this.isDelete = isDelete;
     }
 
@@ -34,13 +32,8 @@ public class Paket  implements Serializable {
                 ", paketAdi='" + paketAdi + '\'' +
                 ", paketKodu='" + paketKodu + '\'' +
                 ", paketQiymeti=" + paketQiymeti +
-                ", idPersonal=" + idPersonal +
                 ", isDelete=" + isDelete +
                 '}';
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
     }
 
     public long getIdPaket() {
@@ -73,14 +66,6 @@ public class Paket  implements Serializable {
 
     public void setPaketQiymeti(BigDecimal paketQiymeti) {
         this.paketQiymeti = paketQiymeti;
-    }
-
-    public long getIdPersonal() {
-        return idPersonal;
-    }
-
-    public void setIdPersonal(long idPersonal) {
-        this.idPersonal = idPersonal;
     }
 
     public int getIsDelete() {
