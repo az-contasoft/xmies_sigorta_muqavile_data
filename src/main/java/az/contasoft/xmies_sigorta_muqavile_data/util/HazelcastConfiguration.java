@@ -51,8 +51,8 @@ public class HazelcastConfiguration {
 
 
     @Bean
-    public IList<SigortaMuqavileData> ListOfSigortaMuqavileData(HazelcastInstance instance) {
-        return instance.getList("ListOfSigortaMuqavileData");
+    public IList<SigortaMuqavileData> listOfSigortaMuqavileData(HazelcastInstance instance) {
+        return instance.getList("listOfSigortaMuqavileData");
     }
 
 

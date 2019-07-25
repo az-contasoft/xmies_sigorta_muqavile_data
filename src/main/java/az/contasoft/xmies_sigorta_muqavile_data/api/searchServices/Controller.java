@@ -28,12 +28,18 @@ public class Controller {
 
     @GetMapping("/getByIdQurum/{idSigortaQurum}")
     public ResponseEntity<List<SigortaMuqavileData>> getMuqavileByIdQurum(@PathVariable("idSigortaQurum") long idSigortaQurum) {
-        logger.info("\n→→→SEARCH_CONTROLLER: getPaketInfoDataByIdPaket\n\n");
+        logger.info("\n→→→SEARCH_CONTROLLER: getMuqavileByIdQurum\n\n");
         return service.getAllMuqavileByIdQurum(idSigortaQurum);
     }
 
+    @GetMapping("/getSigortaMuqavileData/{idSigortaMuqavile}")
+    public ResponseEntity<SigortaMuqavileData> getSigortaMuqavileData(@PathVariable("idSigortaMuqavile") long idSigortaMuqavile) {
+        logger.info("\n→→→SEARCH_CONTROLLER: getSigortaMuqavileData\n\n");
+        return service.getSigortaMuqavileData(idSigortaMuqavile);
+    }
+
     @GetMapping("/getAll")
-    public ResponseEntity<List<SigortaMuqavileData>> getSigortaMuqavileData() {
+    public ResponseEntity<List<SigortaMuqavileData>> getAllSigortaMuqavileData() {
         logger.info("\n→→→SEARCH_CONTROLLER: getSigortaMuqavileData\n\n");
         return service.getAllSigortaMuqavileData();
     }

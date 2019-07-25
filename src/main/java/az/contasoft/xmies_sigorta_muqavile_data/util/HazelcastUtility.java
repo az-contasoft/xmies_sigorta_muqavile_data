@@ -27,7 +27,7 @@ public class HazelcastUtility {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    private final IList<SigortaMuqavileData> listOfsigortaMuqavileData;
+    private final IList<SigortaMuqavileData> listOfSigortaMuqavileData;
     private final PaketProxy paketProxy;
     private final IMap<Long, Paket> mapOfPaket;
 
@@ -42,8 +42,8 @@ public class HazelcastUtility {
 
     private final IMap<Long, SigortaQurum> mapOfSigortaQurum;
 
-    public HazelcastUtility(IList<SigortaMuqavileData> listOfsigortaMuqavileData, PaketProxy paketProxy, IMap<Long, Paket> mapOfPaket, XidmetlerProxy xidmetlerProxy, IMap<Long, Xidmetler> mapOfXidmetler, SigortaMuqavileProxy sigortaMuqavileProxy, IMap<Long, SigortaMuqavile> mapOfSigortaMuqavile, SigortaQurumProxy sigortaQurumProxy, IMap<Long, SigortaQurum> mapOfSigortaQurum) {
-        this.listOfsigortaMuqavileData = listOfsigortaMuqavileData;
+    public HazelcastUtility(IList<SigortaMuqavileData> listOfSigortaMuqavileData, PaketProxy paketProxy, IMap<Long, Paket> mapOfPaket, XidmetlerProxy xidmetlerProxy, IMap<Long, Xidmetler> mapOfXidmetler, SigortaMuqavileProxy sigortaMuqavileProxy, IMap<Long, SigortaMuqavile> mapOfSigortaMuqavile, SigortaQurumProxy sigortaQurumProxy, IMap<Long, SigortaQurum> mapOfSigortaQurum) {
+        this.listOfSigortaMuqavileData = listOfSigortaMuqavileData;
         this.paketProxy = paketProxy;
         this.mapOfPaket = mapOfPaket;
         this.xidmetlerProxy = xidmetlerProxy;
@@ -54,11 +54,11 @@ public class HazelcastUtility {
         this.mapOfSigortaQurum = mapOfSigortaQurum;
     }
 
-    public IList<SigortaMuqavileData> getListOfsigortaMuqavileData() {
-        if (listOfsigortaMuqavileData.isEmpty()) {
+    public IList<SigortaMuqavileData> getListOfSigortaMuqavileData() {
+        if (listOfSigortaMuqavileData.isEmpty()) {
             startCaching();
         }
-        return listOfsigortaMuqavileData;
+        return listOfSigortaMuqavileData;
     }
 
 
@@ -137,8 +137,16 @@ public class HazelcastUtility {
     }
 
 
-    private void getAllSigortaMuqavileData() {
+    public SigortaMuqavileData getSigortaMuqavileData(long idSigortaMuqavile) {
+        SigortaMuqavileData sigortaMuqavileData = getListOfSigortaMuqavileData().stream().filter(smd -> smd.getSigortaMuqavile().getIdSigortaMuqavile()==idSigortaMuqavile).findAny().orElse(null);
+        logger.info("sigortaMuqavileData : {}", sigortaMuqavileData);
+        return sigortaMuqavileData;
+    }
+
+
+    private void collectSigortaMuqavileData() {
         try {
+            logger.info("trying to get department SigortaMuqavile from hazelcast");
             Map<Long, SigortaMuqavile> sigortaMuqavileMap = getSigortaMuqavile();
             for (Long idSigortaMuqavile : sigortaMuqavileMap.keySet()) {
                 SigortaMuqavileData sigortaMuqavileData = new SigortaMuqavileData();
@@ -159,22 +167,23 @@ public class HazelcastUtility {
                         sigortaMuqavileData.setPaket(paket);
                     }
                 }
-                listOfsigortaMuqavileData.add(sigortaMuqavileData);
+                listOfSigortaMuqavileData.add(sigortaMuqavileData);
             }
+            logger.info("listOfSigortaMuqavileData" + listOfSigortaMuqavileData.size());
         } catch (Exception e) {
             logger.error("Error getting all SigortaMuqavile info data " + e, e);
         }
     }
 
     public void startCaching() {
-        listOfsigortaMuqavileData.clear();
-        getAllSigortaMuqavileData();
+        listOfSigortaMuqavileData.clear();
+        collectSigortaMuqavileData();
     }
 
     @PostConstruct
     public void init() {
-        listOfsigortaMuqavileData.clear();
-        listOfsigortaMuqavileData.destroy();
+        listOfSigortaMuqavileData.clear();
+        listOfSigortaMuqavileData.destroy();
         logger.info("\n→→→HAZEL: trying to init PostConstruct\n\n");
         startCaching();
     }

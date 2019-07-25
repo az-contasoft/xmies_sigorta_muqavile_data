@@ -26,7 +26,7 @@ public class Service {
 
     public ResponseEntity<List<SigortaMuqavileData>> getAllSigortaMuqavileData() {
         try {
-            List<SigortaMuqavileData> sigortaMuqavileDataList = hazelcastUtility.getListOfsigortaMuqavileData();
+            List<SigortaMuqavileData> sigortaMuqavileDataList = hazelcastUtility.getListOfSigortaMuqavileData();
             if (sigortaMuqavileDataList == null || sigortaMuqavileDataList.isEmpty()) {
                 logger.info("sigortaMuqavileDataList isEmpty");
                 return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
@@ -41,7 +41,7 @@ public class Service {
 
     public ResponseEntity<List<SigortaMuqavileData>> getAllMuqavileByIdQurum(long idSigortaQurum) {
         try {
-            List<SigortaMuqavileData> sigortaMuqavileDataList = hazelcastUtility.getListOfsigortaMuqavileData().stream().filter(smd -> smd.getSigortaMuqavile().getIdSigortaQurum() == idSigortaQurum).collect(Collectors.toList());
+            List<SigortaMuqavileData> sigortaMuqavileDataList = hazelcastUtility.getListOfSigortaMuqavileData().stream().filter(smd -> smd.getSigortaMuqavile().getIdSigortaQurum() == idSigortaQurum).collect(Collectors.toList());
             if (sigortaMuqavileDataList.isEmpty()) {
                 logger.info("sigortaQurumList isEmpty");
                 return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
@@ -53,6 +53,25 @@ public class Service {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    public ResponseEntity<SigortaMuqavileData> getSigortaMuqavileData(long idSigortaMuqavile) {
+        try {
+            SigortaMuqavileData sigortaMuqavileData = hazelcastUtility.getSigortaMuqavileData(idSigortaMuqavile);
+            if (sigortaMuqavileData == null) {
+                logger.info("sigortaMuqavileData Null");
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            }
+            logger.info("sigortaMuqavileData size : {}", sigortaMuqavileData);
+            return new ResponseEntity<>(sigortaMuqavileData, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("\n→→→: error  e: {}, e: {}\n\n", e, e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
 
     public ResponseEntity<String> startCaching() {
         hazelcastUtility.startCaching();
