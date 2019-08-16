@@ -9,11 +9,11 @@ public class SigortaQurum implements Serializable {
 
     private long idSigortaQurum;
     private String qurumAdi;
-    private int qurumType;
+    private long qurumType;
     private  int isActive;
     private int isDelete;
 
-    public SigortaQurum(long idSigortaQurum, String qurumAdi, int qurumType, int isActive, int isDelete) {
+    public SigortaQurum(long idSigortaQurum, String qurumAdi, long qurumType, int isActive, int isDelete) {
         this.idSigortaQurum = idSigortaQurum;
         this.qurumAdi = qurumAdi;
         this.qurumType = qurumType;
@@ -51,7 +51,7 @@ public class SigortaQurum implements Serializable {
         this.qurumAdi = qurumAdi;
     }
 
-    public int getQurumType() {
+    public long getQurumType() {
         return qurumType;
     }
 

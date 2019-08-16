@@ -56,6 +56,7 @@ public class HazelcastUtility {
 
     public IList<SigortaMuqavileData> getListOfSigortaMuqavileData() {
         if (listOfSigortaMuqavileData.isEmpty()) {
+            logger.info("Eger listOfSigortaMuqavileData boshdursa startCaching-e getsin");
             startCaching();
         }
         return listOfSigortaMuqavileData;
@@ -113,7 +114,7 @@ public class HazelcastUtility {
             }
             return sigortaQurum;
         } catch (Exception e) {
-            logger.error("Error getting SigortaQurum from MapOfSigortaQurum or getting data from SigortaQurum Proxy : " + e, e);
+            logger.error("Error getting SigortaQurum from mapOfSigortaQurum or getting data from SigortaQurum Proxy : " + e, e);
             return null;
         }
     }
@@ -146,25 +147,28 @@ public class HazelcastUtility {
 
     private void collectSigortaMuqavileData() {
         try {
-            logger.info("trying to get department SigortaMuqavile from hazelcast");
+            logger.info("trying to get  SigortaMuqavile from hazelcast");
             Map<Long, SigortaMuqavile> sigortaMuqavileMap = getSigortaMuqavile();
             for (Long idSigortaMuqavile : sigortaMuqavileMap.keySet()) {
                 SigortaMuqavileData sigortaMuqavileData = new SigortaMuqavileData();
                 SigortaMuqavile sigortaMuqavile = sigortaMuqavileMap.get(idSigortaMuqavile);
                 sigortaMuqavileData.setSigortaMuqavile(sigortaMuqavile);
-
+                logger.info("sigortaMuqavile-u aldig"+sigortaMuqavile.toString());
                 if (sigortaMuqavile.getIdSigortaQurum() > 0) {
                     SigortaQurum sigortaQurum = getSigortaQurum(sigortaMuqavile.getIdSigortaQurum());
                     sigortaMuqavileData.setSigortaQurum(sigortaQurum);
+                    logger.info("sigortaQurum-u aldig : {}", sigortaQurum);
                 }
 
                 if (sigortaMuqavile.getIdXidmetler() > 0) {
                     Xidmetler xidmetler = getXidmetler(sigortaMuqavile.getIdXidmetler());
                     sigortaMuqavileData.setXidmetler(xidmetler);
+                    logger.info("xidmetler-i aldig : {}", xidmetler);
                 } else {
                     if (sigortaMuqavile.getIdPaket() > 0) {
                         Paket paket = getPaket(sigortaMuqavile.getIdPaket());
                         sigortaMuqavileData.setPaket(paket);
+                        logger.info("paket-i aldig : {}", paket);
                     }
                 }
                 listOfSigortaMuqavileData.add(sigortaMuqavileData);
@@ -177,13 +181,13 @@ public class HazelcastUtility {
 
     public void startCaching() {
         listOfSigortaMuqavileData.clear();
+        listOfSigortaMuqavileData.destroy();
+        logger.info(" listOfSigortaMuqavileData clear"+listOfSigortaMuqavileData.size());
         collectSigortaMuqavileData();
     }
 
     @PostConstruct
     public void init() {
-        listOfSigortaMuqavileData.clear();
-        listOfSigortaMuqavileData.destroy();
         logger.info("\n→→→HAZEL: trying to init PostConstruct\n\n");
         startCaching();
     }

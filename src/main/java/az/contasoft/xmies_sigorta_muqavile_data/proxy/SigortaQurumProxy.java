@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 public interface SigortaQurumProxy {
 
-    @GetMapping("/xmies_sigortaqurum/searchServices/getSigortaQurum/{idSigortaQurum}")
+    @GetMapping("/xmies_sigortaqurum/searchServices/byIdSigortaQurum/{idSigortaQurum}")
     ResponseEntity<SigortaQurum> getByIdSigortaQurum(@PathVariable("idSigortaQurum") long idSigortaQurum);
 
 }

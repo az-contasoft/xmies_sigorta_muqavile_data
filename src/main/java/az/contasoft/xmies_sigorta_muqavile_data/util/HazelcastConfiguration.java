@@ -6,6 +6,8 @@ import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internal.Sigo
 import az.contasoft.xmies_sigortaqurum.db.entity.SigortaQurum;
 import az.contasoft.xmies_xidmetler.db.entity.Xidmetler;
 import com.hazelcast.config.Config;
+import com.hazelcast.config.JoinConfig;
+import com.hazelcast.config.NetworkConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IList;
@@ -20,8 +22,10 @@ public class HazelcastConfiguration {
     @Bean
     public Config config() {
         Config config = new Config();
-        config.setProperty("hazelcast.logging.type","none");
-        return new Config();
+        NetworkConfig networkConfig = config.getNetworkConfig();
+        JoinConfig joinConfig = networkConfig.getJoin();
+        joinConfig.getMulticastConfig().setEnabled(true).addTrustedInterface("192.168.200.6");
+        return config;
     }
 
     @Bean
