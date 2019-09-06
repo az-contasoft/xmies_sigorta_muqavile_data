@@ -1,14 +1,12 @@
 package az.contasoft.xmies_sigorta_muqavile_data.api.searchServices;
 
+import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internal.RequestText;
 import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internal.SigortaMuqavileData;
 import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internalServices.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,6 +35,11 @@ public class Controller {
 //        logger.info("\n→→→SEARCH_CONTROLLER: getMuqavileByQurumAdi\n\n");
 //        return service.getAllSigortaMuqavileDataByQurumAdi(name);
 //    }
+@PostMapping("/sigortaAdi")
+public ResponseEntity<List<SigortaMuqavileData>> getQurumName(@RequestBody RequestText requestText){
+    logger.info("{}","getting QurumAdi by enteredText from hazelcast");
+    return service.getQurumName(requestText);
+}
 
     @GetMapping("/getSigortaMuqavileData/{idSigortaMuqavile}")
     public ResponseEntity<SigortaMuqavileData> getSigortaMuqavileData(@PathVariable("idSigortaMuqavile") long idSigortaMuqavile) {

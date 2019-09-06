@@ -24,7 +24,7 @@ public class HazelcastConfiguration {
         Config config = new Config();
         NetworkConfig networkConfig = config.getNetworkConfig();
         JoinConfig joinConfig = networkConfig.getJoin();
-        joinConfig.getMulticastConfig().setEnabled(true).addTrustedInterface("192.168.200.6");
+        joinConfig.getMulticastConfig().setEnabled(true).addTrustedInterface("192.168.200.6").addTrustedInterface("192.168.200.12");
         return config;
     }
 

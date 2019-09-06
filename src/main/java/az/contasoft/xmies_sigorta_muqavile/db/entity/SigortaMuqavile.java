@@ -8,6 +8,7 @@ public class SigortaMuqavile implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private long idSigortaMuqavile;
+    private String muqavileAdi;
     private long idSigortaQurum;
     private long idPaket; //   idPaket
     private int endirimFaizi;
@@ -15,8 +16,9 @@ public class SigortaMuqavile implements Serializable {
     private int isActive;
     private int isDelete;
 
-    public SigortaMuqavile(long idSigortaMuqavile, long idSigortaQurum, long idPaket, int endirimFaizi, long idXidmetler, int isActive, int isDelete) {
+    public SigortaMuqavile(long idSigortaMuqavile, String muqavileAdi, long idSigortaQurum, long idPaket, int endirimFaizi, long idXidmetler, int isActive, int isDelete) {
         this.idSigortaMuqavile = idSigortaMuqavile;
+        this.muqavileAdi = muqavileAdi;
         this.idSigortaQurum = idSigortaQurum;
         this.idPaket = idPaket;
         this.endirimFaizi = endirimFaizi;
@@ -32,6 +34,7 @@ public class SigortaMuqavile implements Serializable {
     public String toString() {
         return "SigortaMuqavile{" +
                 "idSigortaMuqavile=" + idSigortaMuqavile +
+                ", muqavileAdi='" + muqavileAdi + '\'' +
                 ", idSigortaQurum=" + idSigortaQurum +
                 ", idPaket=" + idPaket +
                 ", endirimFaizi=" + endirimFaizi +
@@ -41,6 +44,13 @@ public class SigortaMuqavile implements Serializable {
                 '}';
     }
 
+    public String getMuqavileAdi() {
+        return muqavileAdi;
+    }
+
+    public void setMuqavileAdi(String muqavileAdi) {
+        this.muqavileAdi = muqavileAdi;
+    }
 
     public long getIdSigortaMuqavile() {
         return idSigortaMuqavile;

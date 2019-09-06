@@ -1,5 +1,6 @@
 package az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internalServices;
 
+import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internal.RequestText;
 import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internal.SigortaMuqavileData;
 import az.contasoft.xmies_sigorta_muqavile_data.util.HazelcastUtility;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +56,32 @@ public class Service {
         }
     }
 
+    public ResponseEntity<List<SigortaMuqavileData>> getQurumName(RequestText requestText) {
+        try {
+            List<SigortaMuqavileData> smdList = hazelcastUtility.getListOfSigortaMuqavileData();
+            String[] enteredTextMas = requestText.getEnteredText().split(" ");
+            for (String enteredTextmas : enteredTextMas) {
+                List<SigortaMuqavileData> yeniList = new ArrayList<>();
+                for (SigortaMuqavileData smd : smdList) {
+                    logger.info(" SigortaMuqavileData : {}",smd);
+                    if (smd.getSigortaQurum().getQurumAdi().toLowerCase().contains(enteredTextmas.trim().toLowerCase())) {
+                        yeniList.add(smd);
+                    }
+                }
+                smdList = yeniList;
+            }
+            if (smdList == null || smdList.isEmpty()) {
+                logger.info("SigortaMuqavileData tapilmadi");
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            }
+            logger.info("requestText : {}, smdList : {}",requestText,smdList.size());
+            return new ResponseEntity<>(smdList, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("\n→→→SEARCH_SERVICE: error getQurumMuqavile e: {}, e: {}\n\n", e, e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     public ResponseEntity<SigortaMuqavileData> getSigortaMuqavileData(long idSigortaMuqavile) {
         try {
@@ -69,8 +97,6 @@ public class Service {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
 
     public ResponseEntity<String> startCaching() {
