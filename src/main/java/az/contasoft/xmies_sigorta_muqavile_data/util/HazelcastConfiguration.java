@@ -53,6 +53,10 @@ public class HazelcastConfiguration {
         return instance.getMap("mapOfXidmetler");
     }
 
+    @Bean
+    public IMap<Long, SigortaMuqavileData> mapOfSigortaMuqavileData(HazelcastInstance instance) {
+        return instance.getMap("mapOfSigortaMuqavileData");
+    }
 
     @Bean
     public IList<SigortaMuqavileData> listOfSigortaMuqavileData(HazelcastInstance instance) {

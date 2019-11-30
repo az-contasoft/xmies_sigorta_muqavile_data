@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -35,6 +36,21 @@ public class Service {
             }
             logger.info("sigortaMuqavileDataList size : {}", sigortaMuqavileDataList.size());
             return new ResponseEntity<>(sigortaMuqavileDataList, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("\n→→→: error  e: {}, e: {}\n\n", e, e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<Map<Long, SigortaMuqavileData>> getAllSigortaMuqavileDataMap() {
+        try {
+            Map<Long, SigortaMuqavileData> sigortaMuqavileDataMap = hazelcastUtility.getMapOfSigortaMuqavileData();
+            if (sigortaMuqavileDataMap == null || sigortaMuqavileDataMap.isEmpty()) {
+                logger.info("MapOfSigortaMuqavileData isEmpty");
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            }
+            logger.info("MapOfSigortaMuqavileData size : {}", sigortaMuqavileDataMap.size());
+            return new ResponseEntity<>(sigortaMuqavileDataMap, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("\n→→→: error  e: {}, e: {}\n\n", e, e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

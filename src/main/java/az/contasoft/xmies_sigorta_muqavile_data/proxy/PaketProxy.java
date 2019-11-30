@@ -13,6 +13,4 @@ public interface PaketProxy {
 
         @GetMapping("/xmies_paket/searchServices/getPaket/{idPaket}")
         ResponseEntity<Paket> getPaket(@PathVariable("idPaket") long idPaket);
-
-
 }

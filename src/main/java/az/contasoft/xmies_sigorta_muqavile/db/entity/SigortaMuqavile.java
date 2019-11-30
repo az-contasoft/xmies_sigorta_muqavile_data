@@ -13,16 +13,18 @@ public class SigortaMuqavile implements Serializable {
     private long idPaket; //   idPaket
     private int endirimFaizi;
     private long idXidmetler;
+    private  int franshiza;
     private int isActive;
     private int isDelete;
 
-    public SigortaMuqavile(long idSigortaMuqavile, String muqavileAdi, long idSigortaQurum, long idPaket, int endirimFaizi, long idXidmetler, int isActive, int isDelete) {
+    public SigortaMuqavile(long idSigortaMuqavile, String muqavileAdi, long idSigortaQurum, long idPaket, int endirimFaizi, long idXidmetler, int franshiza, int isActive, int isDelete) {
         this.idSigortaMuqavile = idSigortaMuqavile;
         this.muqavileAdi = muqavileAdi;
         this.idSigortaQurum = idSigortaQurum;
         this.idPaket = idPaket;
         this.endirimFaizi = endirimFaizi;
         this.idXidmetler = idXidmetler;
+        this.franshiza = franshiza;
         this.isActive = isActive;
         this.isDelete = isDelete;
     }
@@ -39,9 +41,18 @@ public class SigortaMuqavile implements Serializable {
                 ", idPaket=" + idPaket +
                 ", endirimFaizi=" + endirimFaizi +
                 ", idXidmetler=" + idXidmetler +
+                ", franshiza=" + franshiza +
                 ", isActive=" + isActive +
                 ", isDelete=" + isDelete +
                 '}';
+    }
+
+    public int getFranshiza() {
+        return franshiza;
+    }
+
+    public void setFranshiza(int franshiza) {
+        this.franshiza = franshiza;
     }
 
     public String getMuqavileAdi() {

@@ -5,10 +5,12 @@ import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internal.Sigo
 import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internalServices.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -53,8 +55,14 @@ public ResponseEntity<List<SigortaMuqavileData>> getQurumName(@RequestBody Reque
         return service.getAllSigortaMuqavileData();
     }
 
+    @GetMapping("/getAllAsMap")
+    public ResponseEntity<Map<Long, SigortaMuqavileData>> getAllAsMap() {
+        logger.info("\n→→→SEARCH_CONTROLLER: getSigortaMuqavileData\n\n");
+        return service.getAllSigortaMuqavileDataMap();
+    }
     @GetMapping("/cache")
     public ResponseEntity<String> startCaching() {
-        return service.startCaching();
+        new Thread(() -> service.startCaching()).start() ;
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 }
