@@ -29,7 +29,7 @@ public class Service {
 
     public ResponseEntity<List<SigortaMuqavileData>> getAllSigortaMuqavileData() {
         try {
-            List<SigortaMuqavileData> sigortaMuqavileDataList = hazelcastUtility.getListOfSigortaMuqavileData();
+            List<SigortaMuqavileData> sigortaMuqavileDataList = new ArrayList<>(hazelcastUtility.getMapOfSigortaMuqavileData().values());
             if (sigortaMuqavileDataList == null || sigortaMuqavileDataList.isEmpty()) {
                 logger.info("sigortaMuqavileDataList isEmpty");
                 return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
@@ -59,7 +59,7 @@ public class Service {
 
     public ResponseEntity<List<SigortaMuqavileData>> getAllMuqavileByIdQurum(long idSigortaQurum) {
         try {
-            List<SigortaMuqavileData> sigortaMuqavileDataList = hazelcastUtility.getListOfSigortaMuqavileData().stream().filter(smd -> smd.getSigortaMuqavile().getIdSigortaQurum() == idSigortaQurum).collect(Collectors.toList());
+            List<SigortaMuqavileData> sigortaMuqavileDataList = hazelcastUtility.getMapOfSigortaMuqavileData().values().stream().filter(smd -> smd.getSigortaMuqavile().getIdSigortaQurum() == idSigortaQurum).collect(Collectors.toList());
             if (sigortaMuqavileDataList.isEmpty()) {
                 logger.info("sigortaQurumList isEmpty");
                 return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
@@ -74,7 +74,7 @@ public class Service {
 
     public ResponseEntity<List<SigortaMuqavileData>> getQurumName(RequestText requestText) {
         try {
-            List<SigortaMuqavileData> smdList = hazelcastUtility.getListOfSigortaMuqavileData();
+            List<SigortaMuqavileData> smdList = new ArrayList<>(hazelcastUtility.getMapOfSigortaMuqavileData().values());
             String[] enteredTextMas = requestText.getEnteredText().split(" ");
             for (String enteredTextmas : enteredTextMas) {
                 List<SigortaMuqavileData> yeniList = new ArrayList<>();

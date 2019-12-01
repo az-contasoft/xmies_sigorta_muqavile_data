@@ -10,14 +10,12 @@ import az.contasoft.xmies_sigorta_muqavile_data.proxy.SigortaQurumProxy;
 import az.contasoft.xmies_sigorta_muqavile_data.proxy.XidmetlerProxy;
 import az.contasoft.xmies_sigortaqurum.db.entity.SigortaQurum;
 import az.contasoft.xmies_xidmetler.db.entity.Xidmetler;
-import com.hazelcast.core.IList;
 import com.hazelcast.core.IMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 
 import java.util.Map;
 
@@ -27,7 +25,7 @@ public class HazelcastUtility {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    private final IList<SigortaMuqavileData> listOfSigortaMuqavileData;
+    //private final IList<SigortaMuqavileData> listOfSigortaMuqavileData;
     private final PaketProxy paketProxy;
     private final IMap<Long, Paket> mapOfPaket;
 
@@ -43,8 +41,7 @@ public class HazelcastUtility {
     private final IMap<Long, SigortaQurum> mapOfSigortaQurum;
     private  IMap<Long, SigortaMuqavileData> mapOfSigortaMuqavileData;
 
-    public HazelcastUtility(IList<SigortaMuqavileData> listOfSigortaMuqavileData, PaketProxy paketProxy, IMap<Long, Paket> mapOfPaket, XidmetlerProxy xidmetlerProxy, IMap<Long, Xidmetler> mapOfXidmetler, SigortaMuqavileProxy sigortaMuqavileProxy, IMap<Long, SigortaMuqavile> mapOfSigortaMuqavile, SigortaQurumProxy sigortaQurumProxy, IMap<Long, SigortaQurum> mapOfSigortaQurum, IMap<Long, SigortaMuqavileData> mapOfSigortaMuqavileData) {
-        this.listOfSigortaMuqavileData = listOfSigortaMuqavileData;
+    public HazelcastUtility(PaketProxy paketProxy, IMap<Long, Paket> mapOfPaket, XidmetlerProxy xidmetlerProxy, IMap<Long, Xidmetler> mapOfXidmetler, SigortaMuqavileProxy sigortaMuqavileProxy, IMap<Long, SigortaMuqavile> mapOfSigortaMuqavile, SigortaQurumProxy sigortaQurumProxy, IMap<Long, SigortaQurum> mapOfSigortaQurum, IMap<Long, SigortaMuqavileData> mapOfSigortaMuqavileData) {
         this.paketProxy = paketProxy;
         this.mapOfPaket = mapOfPaket;
         this.xidmetlerProxy = xidmetlerProxy;
@@ -56,13 +53,7 @@ public class HazelcastUtility {
         this.mapOfSigortaMuqavileData = mapOfSigortaMuqavileData;
     }
 
-    public IList<SigortaMuqavileData> getListOfSigortaMuqavileData() {
-        if (listOfSigortaMuqavileData.isEmpty()) {
-            logger.info("Eger listOfSigortaMuqavileData boshdursa startCaching-e getsin");
-            startCaching();
-        }
-        return listOfSigortaMuqavileData;
-    }
+
 
     public IMap<Long, SigortaMuqavileData> getMapOfSigortaMuqavileData() {
         if (mapOfSigortaMuqavileData.isEmpty()){
@@ -70,6 +61,8 @@ public class HazelcastUtility {
         }
         return mapOfSigortaMuqavileData;
     }
+
+
 
     public Xidmetler getXidmetler(long idXidmetler) {
         try {
@@ -146,7 +139,7 @@ public class HazelcastUtility {
 
 
     public SigortaMuqavileData getSigortaMuqavileData(long idSigortaMuqavile) {
-        SigortaMuqavileData sigortaMuqavileData = getListOfSigortaMuqavileData().stream().filter(smd -> smd.getSigortaMuqavile().getIdSigortaMuqavile()==idSigortaMuqavile).findAny().orElse(null);
+        SigortaMuqavileData sigortaMuqavileData = getMapOfSigortaMuqavileData().values().stream().filter(smd -> smd.getSigortaMuqavile().getIdSigortaMuqavile()==idSigortaMuqavile).findAny().orElse(null);
         logger.info("sigortaMuqavileData : {}", sigortaMuqavileData);
         return sigortaMuqavileData;
     }
@@ -179,9 +172,8 @@ public class HazelcastUtility {
                     }
                 }
                 mapOfSigortaMuqavileData.put(sigortaMuqavile.getIdSigortaMuqavile(),sigortaMuqavileData);
-                listOfSigortaMuqavileData.add(sigortaMuqavileData);
             }
-            logger.info("listOfSigortaMuqavileData" + listOfSigortaMuqavileData.size());
+            logger.info("listOfSigortaMuqavileData" + mapOfSigortaMuqavileData.size());
         } catch (Exception e) {
             logger.error("Error getting all SigortaMuqavile info data " + e, e);
         }
@@ -190,9 +182,7 @@ public class HazelcastUtility {
     public void startCaching() {
         mapOfSigortaMuqavileData.clear();
         mapOfSigortaMuqavileData.destroy();
-        listOfSigortaMuqavileData.clear();
-        listOfSigortaMuqavileData.destroy();
-        logger.info(" listOfSigortaMuqavileData clear"+listOfSigortaMuqavileData.size());
+        logger.info(" listOfSigortaMuqavileData clear"+mapOfSigortaMuqavileData.size());
         collectSigortaMuqavileData();
     }
 }
