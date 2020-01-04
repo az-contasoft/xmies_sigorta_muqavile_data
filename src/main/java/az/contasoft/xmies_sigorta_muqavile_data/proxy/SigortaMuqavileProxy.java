@@ -10,12 +10,15 @@ import java.util.Map;
 
 
 @FeignClient(name = "netflix-zuul-api-gateway-server")
-    @RibbonClient(name = "xmies_sigorta_muqavile")
+@RibbonClient(name = "xmies_sigorta_muqavile")
 
 public interface SigortaMuqavileProxy {
 
-        @GetMapping("/xmies_sigorta_muqavile/searchServices/list")
-        ResponseEntity<Map<Long,SigortaMuqavile>> getSigortaMuqavile();
-    }
+    @GetMapping("/xmies_sigorta_muqavile/searchServices/list")
+    ResponseEntity<Map<Long, SigortaMuqavile>> getSigortaMuqavile();
+
+    @GetMapping("/xmies_sigorta_muqavile/searchServices/redis/list")
+    ResponseEntity<Map<Long, SigortaMuqavile>> getAllSigortaMuqavileFromRedis();
+}
 
 

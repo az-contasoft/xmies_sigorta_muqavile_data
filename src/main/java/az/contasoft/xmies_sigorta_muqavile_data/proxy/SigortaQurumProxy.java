@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Map;
+
 
 @FeignClient(name = "netflix-zuul-api-gateway-server")
 @RibbonClient(name = "xmies_sigortaqurum")
@@ -15,6 +17,9 @@ public interface SigortaQurumProxy {
 
     @GetMapping("/xmies_sigortaqurum/searchServices/byIdSigortaQurum/{idSigortaQurum}")
     ResponseEntity<SigortaQurum> getByIdSigortaQurum(@PathVariable("idSigortaQurum") long idSigortaQurum);
+
+    @GetMapping("/xmies_sigortaqurum/searchServices/redis/list")
+    ResponseEntity<Map<Long, SigortaQurum>> getAllSigortaQurumFromRedis();
 
 }
 

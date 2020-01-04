@@ -7,10 +7,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-    @FeignClient(name = "netflix-zuul-api-gateway-server")
-    @RibbonClient(name = "xmies_paket")
+import java.util.Map;
+
+@FeignClient(name = "netflix-zuul-api-gateway-server")
+@RibbonClient(name = "xmies_paket")
 public interface PaketProxy {
 
-        @GetMapping("/xmies_paket/searchServices/getPaket/{idPaket}")
-        ResponseEntity<Paket> getPaket(@PathVariable("idPaket") long idPaket);
+    @GetMapping("/xmies_paket/searchServices/getPaket/{idPaket}")
+    ResponseEntity<Paket> getPaket(@PathVariable("idPaket") long idPaket);
+
+
+    @GetMapping("/xmies_paket/searchServices/redis/getAll")
+    ResponseEntity<Map<Long, Paket>> getAllByIsDelete();
 }
