@@ -17,4 +17,5 @@ public class Xidmetler implements Serializable {
     private String reanimasiyda_yatis;
     private String stasionarda_yatis;
     private int isDelete;
+    private long parentId;
 }
