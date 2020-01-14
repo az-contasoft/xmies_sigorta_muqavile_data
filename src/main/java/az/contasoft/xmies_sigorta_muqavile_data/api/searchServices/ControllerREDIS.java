@@ -2,7 +2,6 @@ package az.contasoft.xmies_sigorta_muqavile_data.api.searchServices;
 
 import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internal.RequestText;
 import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internal.SigortaMuqavileData;
-import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internalServices.Service;
 import az.contasoft.xmies_sigorta_muqavile_data.api.searchServices.internalServices.ServiceREDIS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

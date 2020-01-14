@@ -10,7 +10,7 @@
     </parent>
     <groupId>az.contasoft</groupId>
     <artifactId>xmies_sigorta_muqavile_data</artifactId>
-    <version>0.0.1-TOVUZ</version>
+    <version>0.0.2-TOVUZ</version>
     <name>xmies_sigorta_muqavile_data</name>
     <description>Demo project for Spring Boot</description>
 
@@ -22,38 +22,7 @@
 
     <dependencies>
 
-        <!--		<dependency>-->
-        <!--			<groupId>com.hazelcast</groupId>-->
-        <!--			<artifactId>hazelcast-all</artifactId>-->
-        <!--			<version>3.2.1</version>-->
 
-        <!--		</dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.cloud</groupId>-->
-        <!--            <artifactId>spring-cloud-dependencies</artifactId>-->
-        <!--            <version>Greenwich.RC2</version>-->
-        <!--            <type>pom</type>-->
-        <!--            <scope>runtime</scope>-->
-        <!--        </dependency>-->
-
-
-
-        <!--        <dependency>-->
-        <!--            <groupId>com.hazelcast</groupId>-->
-        <!--            <artifactId>hazelcast</artifactId>-->
-        <!--            <version>3.11.4</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.hazelcast</groupId>-->
-        <!--            <artifactId>hazelcast-spring</artifactId>-->
-        <!--            <version>3.11.4</version>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>com.hazelcast</groupId>-->
-        <!--            <artifactId>hazelcast-client</artifactId>-->
-        <!--        </dependency>-->
 
 
 
@@ -181,7 +150,7 @@
                 <executions>
                     <execution>
                         <id>default</id>
-                        <phase>install</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>build</goal>
                             <goal>push</goal>
