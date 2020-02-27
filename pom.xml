@@ -10,7 +10,7 @@
     </parent>
     <groupId>az.contasoft</groupId>
     <artifactId>xmies_sigorta_muqavile_data</artifactId>
-    <version>0.0.2-TOVUZ</version>
+    <version>0.0.4</version>
     <name>xmies_sigorta_muqavile_data</name>
     <description>Demo project for Spring Boot</description>
 
@@ -150,7 +150,7 @@
                 <executions>
                     <execution>
                         <id>default</id>
-                        <phase>package</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>build</goal>
                             <goal>push</goal>
